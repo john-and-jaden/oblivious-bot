@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Blank Template",
-    "slug": "obliviousReact",
+    "name": "Oblivious Bot",
+    "slug": "oblivious",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [

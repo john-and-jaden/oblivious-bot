@@ -64,6 +64,6 @@ async function setupFaceApiRequirements() {
 
   // load models
   await faceapi.nets.faceExpressionNet.loadFromDisk('./models');
-  await faceapi.nets.SsdMobilenetv1.loadFromDisk('./models');
-  await faceapi.nets.FaceLandmark68Net.loadFromDisk('./models');
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk('./models');
+  await faceapi.nets.faceLandmark68Net.loadFromDisk('./models');
 }

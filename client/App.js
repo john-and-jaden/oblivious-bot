@@ -9,7 +9,7 @@ export default class App extends Component {
     this.state = {
       imgData: null,
       hasCameraPermission: false,
-      cameraType: Camera.Constants.Type.back
+      cameraType: Camera.Constants.Type.front
     };
     this.camera = createRef();
     this.takePic = this.takePic.bind(this);
@@ -24,7 +24,7 @@ export default class App extends Component {
   }
 
   async takePic() {
-    let photo = await this.camera.current.takePictureAsync({ base64: true })
+    let photo = await this.camera.current.takePictureAsync({ base64: true });
     console.log(photo.base64.substring(0, 50));
 
     const options = {

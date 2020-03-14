@@ -2,10 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+
 const app = express();
 const port = 3000;
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50MB' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
@@ -57,13 +58,18 @@ async function setup() {
 }
 
 async function processImage(base64Input) {
-  console.log("yeet");
+  console.log(base64Input.substring(0, 50));
 
   // Generate Image from base64
+  const canvas = createCanvas(500, 500);
+  const ctx = canvas.getContext('2d');
+
   const img = new Image();
-  // img.onload = () => ctx.drawImage(img, 0, 0)
-  // img.onerror = err => { throw err }
-  // img.src = base64Input;
+  img.onload = () => ctx.drawImage(img, 0, 0);
+  img.onerror = err => {
+    throw err;
+  };
+  img.src = 'data:image/png;base64,' + base64Input;
 
   const detectionWithExpressions = await faceapi
     .detectSingleFace(img)
@@ -76,17 +82,4 @@ async function processImage(base64Input) {
     })
     .pop();
   return expr;
-  const canvas = createCanvas(500, 500);
-  const ctx = canvas.getContext('2d');
-
-  const img = new Image();
-  img.onload = () => ctx.drawImage(img, 0, 0);
-  img.onerror = err => {
-    throw err;
-  };
-
-  img.src = 'data:image/png;base64,' + base64Input;
-
-  const buffer = canvas.toBuffer('image/png');
-  fs.writeFileSync('test.png', buffer);
 }

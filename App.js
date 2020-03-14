@@ -23,17 +23,14 @@ export default class App extends Component {
     });
   }
 
-  takePic() {
-    let base64 = '';
-    this.camera.current.takePictureAsync({ base64: true }).then(pic => {
-      console.log(pic.base64.substring(0, 50));
-      base64 = pic.base64;
-    });
+  async takePic() {
+    let photo = await this.camera.current.takePictureAsync({ base64: true })
+    console.log(photo.base64.substring(0, 50));
 
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ param: base64 })
+      body: JSON.stringify({ base64: photo.base64 })
     };
     fetch('http://192.168.0.116:3000', options)
       .then(response => response.json())

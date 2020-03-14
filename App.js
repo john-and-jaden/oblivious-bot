@@ -24,13 +24,25 @@ export default class App extends Component {
   }
 
   takePic() {
-    //alert('Yeet');
     this.camera.current.takePictureAsync({ base64: true }).then(pic => {
       console.log(pic.uri);
       this.setState({
         imgData: pic.uri
       });
     });
+
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({'param':'message'})
+    };
+    fetch('http://192.168.0.116:3000', options)
+      .then(response => response.json())
+      .then(data => {
+        console.log("yooo");
+      }).catch(err => {
+        console.log("that's not good.");
+      });
   }
 
   render() {

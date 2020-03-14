@@ -1,6 +1,16 @@
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const app = express();
 const port = 3000;
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.send(`GET: you said ${req.query.param}`);
+});
 
 // import nodejs bindings to native tensorflow,
 // not required, but will speed up things drastically (python required)
@@ -19,12 +29,13 @@ setup();
 
 app.post('/', (req, res) => {
   processImage(req.query.param);
-  //   res.send(
-  //     'You said ' +
-  //       req.query.parameterPassed +
-  //       '\n And I respond the reverse: ' +
-  //       myFun(req.query.parameterPassed)
-  //   );
+  console.log('hey');
+  res.send(
+    'You said ' +
+      req.body.param +
+      '\n And I respond the reverse: ' +
+      myFun(req.body.param)
+  );
 });
 
 app.listen(port, () =>
@@ -49,6 +60,5 @@ async function setup() {
 async function processImage(base64Input) {
   const img = new Image();
 
-  img.onload = () => ctx.
-  img.src = 'data:image/png;base64,' + base64Input;
+  img.onload = () => (ctx.img.src = 'data:image/png;base64,' + base64Input);
 }

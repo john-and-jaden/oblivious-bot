@@ -45,13 +45,16 @@ async function getExpressionsFromImage(base64Input) {
 
   const detectionWithExpressions = await faceapi
     .detectSingleFace(img)
+    .withFaceLandmarks()
     .withFaceExpressions();
+  console.log(detectionWithExpressions);
   var expressions = detectionWithExpressions.expressions.asSortedArray();
   var expr = expressions
     .sort((a, b) => {
       return a.probability - b.probability;
     })
     .pop();
+  console.log(expr);
   return expr;
 }
 

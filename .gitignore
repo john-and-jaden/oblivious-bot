@@ -1,6 +1,6 @@
 client/node_modules/**/*
 server/node_modules/**/*
-.expo/*
+client/.expo/*
 npm-debug.*
 *.jks
 *.p8

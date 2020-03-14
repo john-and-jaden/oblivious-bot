@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+const fs = require('fs');
 const app = express();
 const port = 3000;
 app.use(cors());
@@ -23,7 +23,7 @@ const faceapi = require('face-api.js');
 
 // patch nodejs environment, we need to provide an implementation of
 // HTMLCanvasElement and HTMLImageElement
-const { Canvas, Image, ImageData } = canvas;
+const { Canvas, Image, ImageData, createCanvas } = canvas;
 
 setup();
 
@@ -76,4 +76,17 @@ async function processImage(base64Input) {
     })
     .pop();
   return expr;
+  const canvas = createCanvas(500, 500);
+  const ctx = canvas.getContext('2d');
+
+  const img = new Image();
+  img.onload = () => ctx.drawImage(img, 0, 0);
+  img.onerror = err => {
+    throw err;
+  };
+
+  img.src = 'data:image/png;base64,' + base64Input;
+
+  const buffer = canvas.toBuffer('image/png');
+  fs.writeFileSync('test.png', buffer);
 }

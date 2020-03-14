@@ -16,8 +16,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    Permissions.askAsync(Permissions.CAMERA)
-    .then(result => {
+    Permissions.askAsync(Permissions.CAMERA).then(result => {
       this.setState({
         hasCameraPermission: result.status === 'granted'
       });
@@ -26,8 +25,7 @@ export default class App extends Component {
 
   takePic() {
     //alert('Yeet');
-    this.camera.current.takePictureAsync({ base64: true })
-    .then(pic => {
+    this.camera.current.takePictureAsync({ base64: true }).then(pic => {
       console.log(pic.uri);
       this.setState({
         imgData: pic.uri
@@ -38,8 +36,16 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Camera style={styles.camera} type={this.state.cameraType} ref={this.camera} />
-        <Button style={styles.button} title="Take Picture" onPress={this.takePic} />
+        <Camera
+          style={styles.camera}
+          type={this.state.cameraType}
+          ref={this.camera}
+        />
+        <Button
+          style={styles.button}
+          title='Take Picture'
+          onPress={this.takePic}
+        />
         <Image style={styles.image} source={{ uri: `${this.state.imgData}` }} />
       </View>
     );

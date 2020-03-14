@@ -63,6 +63,7 @@ async function setupFaceApiRequirements() {
   faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
   // load models
-  await faceapi.nets.tinyFaceDetector.loadFromDisk('./models');
   await faceapi.nets.faceExpressionNet.loadFromDisk('./models');
+  await faceapi.nets.SsdMobilenetv1.loadFromDisk('./models');
+  await faceapi.nets.FaceLandmark68Net.loadFromDisk('./models');
 }

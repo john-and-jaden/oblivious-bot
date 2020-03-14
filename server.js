@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+const fs = require('fs');
 const app = express();
 const port = 3000;
 app.use(cors());
@@ -23,19 +23,19 @@ const faceapi = require('face-api.js');
 
 // patch nodejs environment, we need to provide an implementation of
 // HTMLCanvasElement and HTMLImageElement
-const { Canvas, Image, ImageData } = canvas;
+const { Canvas, Image, ImageData, createCanvas } = canvas;
 
 setup();
 
 app.post('/', (req, res) => {
-  processImage(req.query.param);
-  console.log('hey');
-  res.send(
-    'You said ' +
-      req.body.param +
-      '\n And I respond the reverse: ' +
-      myFun(req.body.param)
-  );
+  processImage(req.body.param);
+  //   console.log('hey');
+  //   res.send(
+  //     'You said ' +
+  //       req.body.param +
+  //       '\n And I respond the reverse: ' +
+  //       myFun(req.body.param)
+  //   );
 });
 
 app.listen(port, () =>
@@ -58,7 +58,17 @@ async function setup() {
 }
 
 async function processImage(base64Input) {
-  const img = new Image();
+  const canvas = createCanvas(500, 500);
+  const ctx = canvas.getContext('2d');
 
-  img.onload = () => (ctx.img.src = 'data:image/png;base64,' + base64Input);
+  const img = new Image();
+  img.onload = () => ctx.drawImage(img, 0, 0);
+  img.onerror = err => {
+    throw err;
+  };
+
+  img.src = 'data:image/png;base64,' + base64Input;
+
+  const buffer = canvas.toBuffer('image/png');
+  fs.writeFileSync('test.png', buffer);
 }

@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19001,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "devToolsPort": 19003,
-  "packagerPort": 19005,
-  "packagerPid": 79480
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://z2-kkq.anonymous.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.z2-kkq.anonymous.client.exp.direct",
+  "ngrokPid": 6184,
+  "devToolsPort": 19002,
+  "packagerPort": 19001,
+  "packagerPid": 6240
 }

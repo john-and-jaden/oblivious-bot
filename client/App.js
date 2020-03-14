@@ -35,8 +35,7 @@ export default class App extends Component {
     fetch('http://192.168.0.116:3000', options)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-        this.readText(data.expression);
+        console.log("successful response");
       })
       .catch(err => {
         console.log("that's not good.");
@@ -45,7 +44,7 @@ export default class App extends Component {
 
   readText(text) {
     console.log(Tts.getInitStatus());
-    Tts.speak('hello world');
+    //Tts.speak('hello world');
   }
 
   render() {

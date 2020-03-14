@@ -1,13 +1,24 @@
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const app = express();
 const port = 3000;
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.send(`GET: you said ${req.query.param}`);
+});
 
 app.post('/', (req, res) => {
+  console.log("hey");
   res.send(
     'You said ' +
-      req.query.parameterPassed +
+      req.body.param +
       '\n And I respond the reverse: ' +
-      myFun(req.query.parameterPassed)
+      myFun(req.body.param)
   );
 });
 

@@ -2,13 +2,29 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+// import nodejs bindings to native tensorflow,
+// not required, but will speed up things drastically (python required)
+require('@tensorflow/tfjs-node');
+
+// implements nodejs wrappers for HTMLCanvasElement, HTMLImageElement, ImageData
+const canvas = require('canvas');
+
+const faceapi = require('face-api.js');
+
+// patch nodejs environment, we need to provide an implementation of
+// HTMLCanvasElement and HTMLImageElement
+const { Canvas, Image, ImageData } = canvas;
+
+setup();
+
 app.post('/', (req, res) => {
-  res.send(
-    'You said ' +
-      req.query.parameterPassed +
-      '\n And I respond the reverse: ' +
-      myFun(req.query.parameterPassed)
-  );
+  processImage(req.query.param);
+  //   res.send(
+  //     'You said ' +
+  //       req.query.parameterPassed +
+  //       '\n And I respond the reverse: ' +
+  //       myFun(req.query.parameterPassed)
+  //   );
 });
 
 app.listen(port, () =>
@@ -23,16 +39,16 @@ function myFun(input) {
   return result;
 }
 
-// import nodejs bindings to native tensorflow,
-// not required, but will speed up things drastically (python required)
-require('@tensorflow/tfjs-node');
+async function setup() {
+  faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
-// implements nodejs wrappers for HTMLCanvasElement, HTMLImageElement, ImageData
-const canvas = require('canvas');
+  await faceapi.nets.tinyFaceDetector.loadFromDisk('./models');
+  await faceapi.nets.faceExpressionNet.loadFromDisk('./models');
+}
 
-const faceapi = require('face-api.js');
+async function processImage(base64Input) {
+  const img = new Image();
 
-// patch nodejs environment, we need to provide an implementation of
-// HTMLCanvasElement and HTMLImageElement
-const { Canvas, Image, ImageData } = canvas;
-faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
+  img.onload = () => ctx.
+  img.src = 'data:image/png;base64,' + base64Input;
+}

@@ -10,7 +10,7 @@ export default class App extends Component {
     this.state = {
       imgData: null,
       hasCameraPermission: false,
-      cameraType: Camera.Constants.Type.back
+      cameraType: Camera.Constants.Type.front
     };
     this.camera = createRef();
     this.takePic = this.takePic.bind(this);
@@ -26,7 +26,7 @@ export default class App extends Component {
   }
 
   async takePic() {
-    let photo = await this.camera.current.takePictureAsync({ base64: true })
+    let photo = await this.camera.current.takePictureAsync({ base64: true });
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,7 +35,7 @@ export default class App extends Component {
     fetch('http://192.168.0.116:3000', options)
       .then(response => response.json())
       .then(data => {
-        console.log("successful response");
+        console.log('successful response');
       })
       .catch(err => {
         console.log("that's not good.");
@@ -44,7 +44,7 @@ export default class App extends Component {
 
   readText(text) {
     console.log(Tts.getInitStatus());
-    //Tts.speak('hello world');
+    Tts.speak('hello world');
   }
 
   render() {

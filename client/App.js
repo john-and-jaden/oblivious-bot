@@ -26,6 +26,7 @@ export default class App extends Component {
   }
 
   async takePic() {
+    // Use RNCamera based on this: https://github.com/react-native-community/react-native-camera/issues/959
     let photo = await this.camera.current.takePictureAsync({ base64: true });
     const options = {
       method: 'POST',

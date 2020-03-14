@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { StyleSheet, Button, Image, View } from 'react-native';
+import Tts from 'react-native-tts';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 
@@ -13,6 +14,7 @@ export default class App extends Component {
     };
     this.camera = createRef();
     this.takePic = this.takePic.bind(this);
+    this.readText = this.readText.bind(this);
   }
 
   componentDidMount() {
@@ -25,8 +27,6 @@ export default class App extends Component {
 
   async takePic() {
     let photo = await this.camera.current.takePictureAsync({ base64: true })
-    console.log(photo.base64.substring(0, 50));
-
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,10 +36,16 @@ export default class App extends Component {
       .then(response => response.json())
       .then(data => {
         console.log(data);
+        this.readText(data.expression);
       })
       .catch(err => {
         console.log("that's not good.");
       });
+  }
+
+  readText(text) {
+    console.log(Tts.getInitStatus());
+    Tts.speak('hello world');
   }
 
   render() {

@@ -28,8 +28,7 @@ const { Canvas, Image, ImageData } = canvas;
 setup();
 
 app.post('/', (req, res) => {
-  processImage(req.query.param);
-  console.log('hey');
+  processImage(req.body.param);
   res.send(
     'You said ' +
       req.body.param +
@@ -58,7 +57,23 @@ async function setup() {
 }
 
 async function processImage(base64Input) {
-  const img = new Image();
+  console.log("yeet");
 
-  img.onload = () => (ctx.img.src = 'data:image/png;base64,' + base64Input);
+  // Generate Image from base64
+  const img = new Image();
+  // img.onload = () => ctx.drawImage(img, 0, 0)
+  // img.onerror = err => { throw err }
+  // img.src = base64Input;
+
+  const detectionWithExpressions = await faceapi
+    .detectSingleFace(img)
+    .withFaceLandmarks()
+    .withFaceExpressions();
+  var expressions = detectionWithExpressions.expressions.asSortedArray();
+  var expr = expressions
+    .sort((a, b) => {
+      return a - b;
+    })
+    .pop();
+  return expr;
 }

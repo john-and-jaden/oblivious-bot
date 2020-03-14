@@ -24,23 +24,23 @@ export default class App extends Component {
   }
 
   takePic() {
+    let base64 = '';
     this.camera.current.takePictureAsync({ base64: true }).then(pic => {
-      console.log(pic.uri);
-      this.setState({
-        imgData: pic.uri
-      });
+      console.log(pic.base64.substring(0, 50));
+      base64 = pic.base64;
     });
 
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({'param':'message'})
+      body: JSON.stringify({ param: base64 })
     };
     fetch('http://192.168.0.116:3000', options)
       .then(response => response.json())
       .then(data => {
-        console.log("yooo");
-      }).catch(err => {
+        console.log(data);
+      })
+      .catch(err => {
         console.log("that's not good.");
       });
   }

@@ -10,7 +10,7 @@ const faceapi = require('face-api.js');
 
 // configure server
 const app = express();
-const port = 3000;
+const port = 3001;
 app.use(cors());
 app.use(bodyParser.json({ limit: '50MB' }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,17 +22,19 @@ const { Canvas, Image, ImageData, createCanvas } = canvas;
 setupFaceApiRequirements();
 
 app.post('/', (req, res) => {
-  const results = getExpressionsFromImage(req.body.base64);
-  res.send(results);
+  const analyzedImagePromise = getExpressionFromImage(req.body.base64);
+
+  analyzedImagePromise.then(results => {
+    res.send(results);
+  });
+
 });
 
 app.listen(port, () =>
   console.log(`Example app listening on port ${port}! 🚀`)
 );
 
-async function getExpressionsFromImage(base64Input) {
-  console.log(base64Input.substring(0, 50));
-
+async function getExpressionFromImage(base64Input) {
   // retrieve and draw image
   const canvas = createCanvas(500, 500);
   const ctx = canvas.getContext('2d');
@@ -47,14 +49,17 @@ async function getExpressionsFromImage(base64Input) {
     .detectSingleFace(img)
     .withFaceLandmarks()
     .withFaceExpressions();
-  console.log(detectionWithExpressions);
+
   var expressions = detectionWithExpressions.expressions.asSortedArray();
+
   var expr = expressions
     .sort((a, b) => {
       return a.probability - b.probability;
     })
     .pop();
+
   console.log(expr);
+
   return expr;
 }
 

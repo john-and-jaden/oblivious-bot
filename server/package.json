@@ -12,16 +12,9 @@
     "body-parser": "^1.19.0",
     "canvas": "^2.6.1",
     "cors": "^2.8.5",
-    "expo": "~36.0.0",
-    "expo-camera": "~8.0.0",
-    "expo-permissions": "~8.0.0",
     "express": "^4.17.1",
     "face-api.js": "^0.22.1",
-    "nodemon": "^2.0.2",
-    "react": "~16.9.0",
-    "react-dom": "~16.9.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
-    "react-native-web": "~0.11.7"
+    "nodemon": "^2.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

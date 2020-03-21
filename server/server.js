@@ -22,12 +22,9 @@ const { Canvas, Image, ImageData, createCanvas } = canvas;
 setupFaceApiRequirements();
 
 app.post('/', (req, res) => {
-  const analyzedImagePromise = getExpressionFromImage(req.body.base64);
-
-  analyzedImagePromise.then(results => {
-    res.send(results);
+  getExpressionFromImage(req.body.base64).then(result => {
+    res.send(result);
   });
-
 });
 
 app.listen(port, () =>
@@ -60,7 +57,7 @@ async function getExpressionFromImage(base64Input) {
 
   console.log(expr);
 
-  return expr;
+  return expr.expression;
 }
 
 async function setupFaceApiRequirements() {

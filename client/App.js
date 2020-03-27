@@ -10,10 +10,12 @@ export default class App extends Component {
     this.state = {
       imgData: null,
       hasCameraPermission: false,
+      isActive: false,
       cameraType: Camera.Constants.Type.front
     };
     this.camera = createRef();
     this.takePic = this.takePic.bind(this);
+    this.toggleActive = this.toggleActive.bind(this);
   }
 
   componentDidMount() {
@@ -22,10 +24,24 @@ export default class App extends Component {
         hasCameraPermission: result.status === 'granted'
       });
     });
+    
+    this.interval = setInterval(() => this.takePic(), 2000);
+  }
+  
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   async takePic() {
+    if (!this.state.isActive) {
+      return;
+    }
+
     let photo = await this.camera.current.takePictureAsync({ base64: true });
+    this.setState({
+      imgData: photo.uri
+    });
+
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -41,6 +57,15 @@ export default class App extends Component {
       });
   }
 
+  toggleActive() {
+    this.setState(state => {
+      let notActive = !state.isActive;
+      return {
+        isActive: notActive
+      };
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -51,8 +76,8 @@ export default class App extends Component {
         />
         <Button
           style={styles.button}
-          title='Take Picture'
-          onPress={this.takePic}
+          title={this.state.isActive ? 'Disable' : 'Enable'}
+          onPress={this.toggleActive}
         />
         <Image style={styles.image} source={{ uri: `${this.state.imgData}` }} />
       </View>

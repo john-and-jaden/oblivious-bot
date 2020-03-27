@@ -66,6 +66,10 @@ async function getExpressionFromImage(base64Input) {
     .withFaceLandmarks()
     .withFaceExpressions();
 
+  if (!detectionWithExpressions) {
+    return "";
+  }
+
   var expressions = detectionWithExpressions.expressions.asSortedArray();
 
   var expr = expressions

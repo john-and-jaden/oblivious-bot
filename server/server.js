@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const WordPOS = require('wordpos');
 
 // faceapi specific imports
 // implements nodejs wrappers for HTMLCanvasElement, HTMLImageElement, ImageData
@@ -22,10 +23,28 @@ const { Canvas, Image, ImageData, createCanvas } = canvas;
 setupFaceApiRequirements();
 
 app.post('/', (req, res) => {
-  getExpressionFromImage(req.body.base64).then(result => {
-    res.send(result);
+  getExpressionFromImage(req.body.base64).then(expressionFromImage => {
+    getSynonym(expressionFromImage).then(synonym => {
+      res.send(synonym);
+    });
   });
 });
+
+async function getSynonym(word) {
+  const wordpos = new WordPOS();
+  var synonym;
+  await wordpos.lookupAdjective(word, lookups => {
+    const longestSynonymList = lookups
+      .sort((a, b) => {
+        return a.synonyms.length - b.synonyms.length;
+      })
+      .pop().synonyms;
+
+    synonym =
+      longestSynonymList[Math.floor(Math.random() * longestSynonymList.length)];
+  });
+  return synonym;
+}
 
 app.listen(port, () =>
   console.log(`Example app listening on port ${port}! 🚀`)
@@ -58,8 +77,6 @@ async function getExpressionFromImage(base64Input) {
       return a.probability - b.probability;
     })
     .pop();
-
-  console.log(expr);
 
   return expr.expression;
 }

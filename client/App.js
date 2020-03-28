@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { StyleSheet, Button, Image, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, Image, View } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import * as Speech from 'expo-speech';
@@ -16,6 +16,7 @@ export default class App extends Component {
     this.camera = createRef();
     this.takePic = this.takePic.bind(this);
     this.toggleActive = this.toggleActive.bind(this);
+    this.toggleCameraType = this.toggleCameraType.bind(this);
   }
 
   componentDidMount() {
@@ -24,10 +25,10 @@ export default class App extends Component {
         hasCameraPermission: result.status === 'granted'
       });
     });
-    
+
     this.interval = setInterval(() => this.takePic(), 2000);
   }
-  
+
   componentWillUnmount() {
     clearInterval(this.interval);
   }
@@ -66,6 +67,18 @@ export default class App extends Component {
     });
   }
 
+  toggleCameraType() {
+    this.setState(state => {
+      let newType =
+        state.cameraType === Camera.Constants.Type.front
+          ? Camera.Constants.Type.back
+          : Camera.Constants.Type.front;
+      return {
+        cameraType: newType
+      };
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -74,11 +87,19 @@ export default class App extends Component {
           type={this.state.cameraType}
           ref={this.camera}
         />
-        <Button
-          style={styles.button}
-          title={this.state.isActive ? 'Disable' : 'Enable'}
-          onPress={this.toggleActive}
-        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={this.toggleActive}>
+            <Text style={styles.buttonText}>
+              {this.state.isActive ? 'Disable' : 'Enable'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={this.toggleCameraType}
+          >
+            <Text style={styles.buttonText}>Flip</Text>
+          </TouchableOpacity>
+        </View>
         <Image style={styles.image} source={{ uri: `${this.state.imgData}` }} />
       </View>
     );
@@ -87,18 +108,30 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#2D2D2A',
     flex: 1
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    flex: 0.2
+  },
   button: {
-    position: 'absolute',
-    backgroundColor: 'red'
+    backgroundColor: '#06D6A0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 3,
+    flex: 1
+  },
+  buttonText: {
+    color: '#FDFFFC',
+    fontSize: 32
   },
   camera: {
     flex: 1,
-    width: '100%'
+    margin: 3
   },
   image: {
     flex: 1,
-    width: '100%'
+    margin: 3
   }
 });

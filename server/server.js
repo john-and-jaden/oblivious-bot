@@ -2,7 +2,9 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const WordPOS = require('wordpos');
+
+// expression synonyms import
+const { output } = require('./output');
 
 // faceapi specific imports
 // implements nodejs wrappers for HTMLCanvasElement, HTMLImageElement, ImageData
@@ -24,27 +26,11 @@ setupFaceApiRequirements();
 
 app.post('/', (req, res) => {
   getExpressionFromImage(req.body.base64).then(expressionFromImage => {
-    getSynonym(expressionFromImage).then(synonym => {
+    getRandomSynonym(expressionFromImage).then(synonym => {
       res.send(synonym);
     });
   });
 });
-
-async function getSynonym(word) {
-  const wordpos = new WordPOS();
-  var synonym;
-  await wordpos.lookupAdjective(word, lookups => {
-    const longestSynonymList = lookups
-      .sort((a, b) => {
-        return a.synonyms.length - b.synonyms.length;
-      })
-      .pop().synonyms;
-
-    synonym =
-      longestSynonymList[Math.floor(Math.random() * longestSynonymList.length)];
-  });
-  return synonym;
-}
 
 app.listen(port, () =>
   console.log(`Example app listening on port ${port}! 🚀`)
@@ -67,10 +53,11 @@ async function getExpressionFromImage(base64Input) {
     .withFaceExpressions();
 
   if (!detectionWithExpressions) {
-    return "";
+    return undefined;
   }
 
   var expressions = detectionWithExpressions.expressions.asSortedArray();
+  console.log(expressions);
 
   var expr = expressions
     .sort((a, b) => {
@@ -79,6 +66,15 @@ async function getExpressionFromImage(base64Input) {
     .pop();
 
   return expr.expression;
+}
+
+async function getRandomSynonym(expression) {
+  if (!expression) {
+    return '';
+  }
+  let synonyms = output.find(syn => syn.expression === expression).synonyms;
+  let rand = Math.floor(Math.random() * synonyms.length);
+  return synonyms[rand];
 }
 
 async function setupFaceApiRequirements() {

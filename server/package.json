@@ -12,8 +12,11 @@
     "body-parser": "^1.19.0",
     "canvas": "^2.6.1",
     "cors": "^2.8.5",
+    "en-dictionary": "^1.2.4",
+    "en-wordnet": "^2.0.6",
     "express": "^4.17.1",
     "face-api.js": "^0.22.1",
+    "google-dictionary-api": "^1.0.8",
     "nodemon": "^2.0.2",
     "wordpos": "^2.0.0"
   },
